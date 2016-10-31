@@ -7,6 +7,7 @@ class UserGroup:
     types = {
         'id': str,
         'objectClass': str,
+        'type': str,
         'profile': UserGroupProfile
     }
 
