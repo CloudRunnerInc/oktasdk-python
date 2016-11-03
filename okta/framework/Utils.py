@@ -58,8 +58,7 @@ class Utils(object):
             # Otherwise, assume all the properties are strings
             else:
                 for key, value in six.iteritems(json_dump):
-                    if key in to_class.__dict__:
-                        custom_setattr(obj, key, json_dump[key])
+                    custom_setattr(obj, key, json_dump[key])
 
             # Some models have dicts as values
             if hasattr(to_class, 'dict_types'):
