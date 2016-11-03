@@ -5,6 +5,7 @@ from okta.models.user.User import User
 from okta.models.user.TempPassword import TempPassword
 from okta.models.user.ResetPasswordToken import ResetPasswordToken
 from okta.models.user.LoginCredentials import LoginCredentials
+from okta.models.usergroup.UserGroup import UserGroup
 
 
 class UsersClient(ApiClient):
@@ -41,6 +42,16 @@ class UsersClient(ApiClient):
         """
         response = ApiClient.get_path(self, '/{0}'.format(uid))
         return Utils.deserialize(response.text, User)
+
+    def get_user_groups(self, uid):
+        """Get the groups a single user is a member of
+
+        :param uid: the user id or login
+        :type uid: str
+        :rtype: UserGroup
+        """
+        response = ApiClient.get_path(self, '/{0}/groups'.format(uid))
+        return Utils.deserialize(response.text, UserGroup)
 
     def update_user(self, user):
         """Update a user
