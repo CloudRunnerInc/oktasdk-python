@@ -1,3 +1,5 @@
+import json
+
 from okta.framework.ApiClient import ApiClient
 from okta.framework.Utils import Utils
 from okta.framework.PagedResults import PagedResults
@@ -52,6 +54,16 @@ class UsersClient(ApiClient):
         """
         response = ApiClient.get_path(self, '/{0}/groups'.format(uid))
         return Utils.deserialize(response.text, UserGroup)
+
+    def get_user_apps(self, uid):
+        """Get the apps a single user has access to
+
+        :param uid: the user id or login
+        :type uid: str
+        :rtype: dict
+        """
+        response = ApiClient.get_path(self, '/{0}/appLinks'.format(uid))
+        return json.loads(response.text)
 
     def update_user(self, user):
         """Update a user
