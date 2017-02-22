@@ -3,6 +3,7 @@ import json
 from okta.framework.ApiClient import ApiClient
 from okta.framework.Utils import Utils
 from okta.framework.PagedResults import PagedResults
+from okta.models.user.Role import Role
 from okta.models.user.User import User
 from okta.models.user.TempPassword import TempPassword
 from okta.models.user.ResetPasswordToken import ResetPasswordToken
@@ -160,6 +161,16 @@ class UsersClient(ApiClient):
             response = ApiClient.get_path(self, '/', params=params)
 
         return PagedResults(response, User)
+
+    def get_user_admin_roles(self, uid):
+        """Get roles for a single user
+
+        :param uid: the user id or login
+        :type uid: str
+        :rtype: Array of Role
+        """
+        response = ApiClient.get_path(self, '/{0}/roles'.format(uid))
+        return Utils.deserialize(response.text, Role)
 
     # LIFECYCLE
     
