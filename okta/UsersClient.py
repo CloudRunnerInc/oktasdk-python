@@ -17,7 +17,8 @@ class UsersClient(ApiClient):
 
     # CRUD
 
-    def get_users(self, limit=None, query=None, filter_string=None):
+    def get_users(self, limit=None, query=None, filter_string=None,
+                  search_string=None):
         """Get a list of Users
 
         :param limit: maximum number of users to return
@@ -26,12 +27,15 @@ class UsersClient(ApiClient):
         :type query: str or None
         :param filter_string: string to filter users
         :type filter_string: str or None
+        :param search_string: string to search users
+        :type search_string: str or None
         :rtype: list of User
         """
         params = {
             'limit': limit,
             'query': query,
-            'filter': filter_string
+            'filter': filter_string,
+            'search': search_string,
         }
         response = ApiClient.get_path(self, '/', params=params)
         return Utils.deserialize(response.text, User)
@@ -136,13 +140,16 @@ class UsersClient(ApiClient):
         response = ApiClient.delete_path(self, '/{0}'.format(uid))
         return Utils.deserialize(response.text, User)
 
-    def get_paged_users(self, limit=None, filter_string=None, after=None, url=None):
+    def get_paged_users(self, limit=None, filter_string=None,
+                        search_string=None, after=None, url=None):
         """Get a paged list of Users
 
         :param limit: maximum number of users to return
         :type limit: int or None
         :param filter_string: string to filter users
         :type filter_string: str or None
+        :param search_string: string to search users
+        :type search_string: str or None
         :param after: user id that filtering will resume after
         :type after: str
         :param url: url that returns a list of User
@@ -156,7 +163,8 @@ class UsersClient(ApiClient):
             params = {
                 'limit': limit,
                 'after': after,
-                'filter': filter_string
+                'filter': filter_string,
+                'search': search_string
             }
             response = ApiClient.get_path(self, '/', params=params)
 
