@@ -1,3 +1,4 @@
+from okta.models.app.AppUser import AppUser
 from okta.framework.ApiClient import ApiClient
 from okta.framework.Utils import Utils
 from okta.framework.PagedResults import PagedResults
@@ -121,3 +122,50 @@ class AppInstanceClient(ApiClient):
         :return: None
         """
         ApiClient.post_path(self, '/{0}/lifecycle/deactivate'.format(id), None)
+
+    # USER
+
+    def get_assigned_user_by_id_to_app(self, aid, uid):
+        """Get the assigned user to an application by user id
+
+        :param aid: the target app id
+        :type aid: str
+        :param uid: the target user id
+        :type uid: str
+        :rtype: AppUser
+        """
+        response = ApiClient.get_path(self, '/{0}/users/{1}'.format(aid, uid))
+        return Utils.deserialize(response.text, AppUser)
+
+    def get_assigned_user_to_app(self, aid, user):
+        """Get the assigned user to an application
+
+        :param aid: the target app id
+        :type aid: str
+        :param user: the target User
+        :type user: User
+        :rtype: AppUser
+        """
+        return self.get_assigned_user_to_app(aid, user.id)
+
+    def get_assigned_users_to_app(self, aid):
+        """Get assigned users to an application
+
+        :param aid: the target app id
+        :type aid: str
+        :rtype: Array of AppUser
+        """
+        response = ApiClient.get_path(self, '/{0}/users'.format(aid))
+        return Utils.deserialize(response.text, AppUser)
+
+    def assign_user_to_app_for_SSO(self, aid, user):
+        """Assigns a user to an application for SSO
+
+        :param aid: the target app id
+        :type aid: str
+        :param user: the target User
+        :type user: User
+        :rtype: AppUser
+        """
+        response = ApiClient.post_path(self, '/{0}/users'.format(aid), user)
+        return Utils.deserialize(response.text, AppUser)
