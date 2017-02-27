@@ -167,5 +167,19 @@ class AppInstanceClient(ApiClient):
         :type user: User
         :rtype: AppUser
         """
-        response = ApiClient.post_path(self, '/{0}/users'.format(aid), user)
+        return self.assign_user_by_id_to_app_for_SSO(aid, user.id)
+
+    def assign_user_by_id_to_app_for_SSO(self, aid, uid):
+        """Assigns a user to an application for SSO
+
+        :param aid: the target app id
+        :type aid: str
+        :param uid: the target user id
+        :type uid: str
+        :rtype: AppUser
+        """
+        params = {
+            'id': uid,
+        }
+        response = ApiClient.post_path(self, '/{0}/users'.format(aid), params)
         return Utils.deserialize(response.text, AppUser)
