@@ -4,6 +4,7 @@ import time
 from okta.framework.Serializer import Serializer
 from okta.framework.OktaError import OktaError
 import six
+from six.moves.urllib.parse import urlencode
 
 
 class ApiClient(object):
@@ -97,6 +98,7 @@ class ApiClient(object):
         if d is None or len(d) == 0:
             return ''
 
-        param_list = [param + '=' + (str(value).lower() if type(value) == bool else str(value))
-                      for param, value in six.iteritems(d) if value is not None]
-        return '?' + "&".join(param_list)
+        return '?{}'.format(urlencode({
+            param: str(value).lower() if type(value) == bool else str(value)
+            for param, value in six.iteritems(d) if value is not None
+        }))
