@@ -58,7 +58,7 @@ class AdminRolesClient(ApiClient):
 
     # Group targets
 
-    def get_group_targets_for_user(self, user, rid, limit=None):
+    def get_group_targets_for_user_admin(self, user, rid, limit=None):
         """List all groups targets for a USER_ADMIN role assignment
 
         :param user: the user
@@ -67,9 +67,9 @@ class AdminRolesClient(ApiClient):
         :type rid: str
         :rtype: Array of UserGroup
         """
-        return self.get_group_targets_for_user_by_id(user.id, rid, limit)
+        return self.get_group_targets_for_user_admin_by_id(user.id, rid, limit)
 
-    def get_group_targets_for_user_by_id(self, uid, rid, limit=None):
+    def get_group_targets_for_user_admin_by_id(self, uid, rid, limit=None):
         """List all groups targets for a USER_ADMIN role assignment
 
         :param uid: the user id
@@ -116,8 +116,8 @@ class AdminRolesClient(ApiClient):
 
     # App targets
 
-    def get_app_targets_for_user(self, user, rid, limit=None):
-        """List all groups targets for a USER_ADMIN role assignment
+    def get_app_targets_for_user_admin(self, user, rid, limit=None):
+        """List all apps targets for a APP_ADMIN role assignment
 
         :param user: the user
         :type user: User
@@ -125,10 +125,10 @@ class AdminRolesClient(ApiClient):
         :type rid: str
         :rtype: Array of Catalog Apps
         """
-        return self.get_app_targets_for_user_by_id(user.id, rid, limit)
+        return self.get_app_targets_for_user_admin_by_id(user.id, rid, limit)
 
-    def get_app_targets_for_user_by_id(self, uid, rid, limit=None):
-        """List all groups targets for a APP_ADMIN role assignment
+    def get_app_targets_for_user_admin_by_id(self, uid, rid, limit=None):
+        """List all apps targets for a APP_ADMIN role assignment
 
         :param uid: the user id
         :type uid: str
@@ -147,7 +147,7 @@ class AdminRolesClient(ApiClient):
         return PagedResults(response, AppInstance)
 
     def add_app_target_to_user_admin(self, user, rid, appname):
-        """Add a app target for a APP_ADMIN role assignment
+        """Add an app target for a APP_ADMIN role assignment
 
         :param user: the user
         :type user: User
@@ -160,7 +160,7 @@ class AdminRolesClient(ApiClient):
         return self.add_app_target_to_user_admin_by_id(user.id, rid, appname)
 
     def add_app_target_to_user_admin_by_id(self, uid, rid, appname):
-        """Add a app target for a APP_ADMIN role assignment
+        """Add an app target for a APP_ADMIN role assignment
 
         :param uid: the user id
         :type uid: str
