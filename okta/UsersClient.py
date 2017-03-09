@@ -55,7 +55,7 @@ class UsersClient(ApiClient):
 
         :param uid: the user id or login
         :type uid: str
-        :rtype: UserGroup
+        :rtype: list of UserGroup
         """
         response = ApiClient.get_path(self, '/{0}/groups'.format(uid))
         return Utils.deserialize(response.text, UserGroup)
