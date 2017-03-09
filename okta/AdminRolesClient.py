@@ -12,16 +12,7 @@ class AdminRolesClient(ApiClient):
 
     # Assignment Operations
 
-    def get_user_admin_roles(self, user):
-        """Get roles for a single user
-
-        :param user: the user
-        :type user: User
-        :rtype: Array of Role
-        """
-        return self.get_user_admin_roles_by_id(user.id)
-
-    def get_user_admin_roles_by_id(self, uid):
+    def get_user_admin_roles(self, uid):
         """Get roles for a single user
 
         :param uid: the user id
@@ -31,7 +22,7 @@ class AdminRolesClient(ApiClient):
         response = ApiClient.get_path(self, '/{0}/roles'.format(uid))
         return Utils.deserialize(response.text, Role)
 
-    def assign_admin_role_to_user_by_id(self, uid, rid):
+    def assign_admin_role_to_user(self, uid, rid):
         """Assign an admin role for a single user
 
         :param uid: the user id
@@ -43,7 +34,7 @@ class AdminRolesClient(ApiClient):
         response = ApiClient.post_path(self, '/{0}/roles'.format(uid), rid)
         return Utils.deserialize(response.text, Role)
 
-    def unassign_admin_role_to_user_by_id(self, uid, rid):
+    def unassign_admin_role_to_user(self, uid, rid):
         """Unassign an admin role for a single user
 
         :param uid: the user id
@@ -58,23 +49,7 @@ class AdminRolesClient(ApiClient):
 
     # Group targets
 
-    def get_paged_group_targets_for_user_admin(self, user, rid, url=None, limit=None):
-        """Get a paged list of group targets for an USER_ADMIN role assignment
-
-        :param user: the user
-        :type user: User
-        :param rid: the USER_ADMIN role id
-        :type rid: str
-        :param url: url that returns a list of group targets
-        :type url: str
-        :param limit: maximum number of Groups to return
-        :type limit: int or None
-        :rtype: Array of UserGroup
-        """
-        return self.get_paged_group_targets_for_user_admin_by_id(user.id, rid,
-                                                                 url, limit)
-
-    def get_paged_group_targets_for_user_admin_by_id(self, uid, rid, url=None, limit=None):
+    def get_paged_group_targets_for_user_admin(self, uid, rid, url=None, limit=None):
         """Get a paged list of group targets for an USER_ADMIN role assignment
 
         :param uid: the user id
@@ -99,20 +74,7 @@ class AdminRolesClient(ApiClient):
 
         return PagedResults(response, UserGroup)
 
-    def get_group_targets_for_user_admin(self, user, rid, limit=None):
-        """Get a list of group targets for an USER_ADMIN role assignment
-
-        :param user: the user
-        :type user: User
-        :param rid: the USER_ADMIN role id
-        :type rid: str
-        :param limit: maximum number of Groups to return
-        :type limit: int or None
-        :rtype: Array of UserGroup
-        """
-        return self.get_group_targets_for_user_admin_by_id(user.id, rid, limit)
-
-    def get_group_targets_for_user_admin_by_id(self, uid, rid, limit=None):
+    def get_group_targets_for_user_admin(self, uid, rid, limit=None):
         """Get a list of group targets for an USER_ADMIN role assignment
 
         :param uid: the user id
@@ -130,20 +92,7 @@ class AdminRolesClient(ApiClient):
         response = ApiClient.get_path(self, url, params=params)
         return Utils.deserialize(response.text, UserGroup)
 
-    def add_group_target_to_user_admin(self, user, rid, gid):
-        """Add a group target for an USER_ADMIN role assignment
-
-        :param user: the user
-        :type user: User
-        :param rid: the USER_ADMIN role id
-        :type rid: str
-        :param gid: the group id to be added
-        :type gid: str
-        :rtype: None
-        """
-        return self.add_group_target_to_user_admin_by_id(user.id, rid, gid)
-
-    def add_group_target_to_user_admin_by_id(self, uid, rid, gid):
+    def add_group_target_to_user_admin(self, uid, rid, gid):
         """Add a group target for an USER_ADMIN role assignment
 
         :param uid: the user id
@@ -159,25 +108,7 @@ class AdminRolesClient(ApiClient):
 
     # App targets
 
-    def get_paged_app_targets_for_app_admin(self, user, rid, url=None,
-                                            limit=None):
-        """Get a paged list of app targets for an APP_ADMIN role assignment
-
-        :param user: the User
-        :type user: User
-        :param rid: the APP_ADMIN role id
-        :type rid: str
-        :param url: url that returns a list of app targets
-        :type url: str
-        :param limit: maximum number of Apps to return
-        :type limit: int or None
-        :rtype: Array of CatalogApp
-        """
-        return self.get_paged_group_targets_for_user_admin_by_id(user.id, rid,
-                                                                 url, limit)
-
-    def get_paged_app_targets_for_app_admin_by_id(self, uid, rid, url=None,
-                                                  limit=None):
+    def get_paged_app_targets_for_app_admin(self, uid, rid, url=None, limit=None):
         """Get a paged list of app targets for an APP_ADMIN role assignment
 
         :param uid: the user id
@@ -202,20 +133,7 @@ class AdminRolesClient(ApiClient):
         # TODO: create Catalog App Model
         return PagedResults(response, AppInstance)
 
-    def get_app_targets_for_app_admin(self, user, rid, limit=None):
-        """Get a list of app targets for an APP_ADMIN role assignment
-
-        :param user: the user
-        :type user: User
-        :param rid: the APP_ADMIN role id
-        :type rid: str
-        :param limit: maximum number of Apps to return
-        :type limit: int or None
-        :rtype: Array of Catalog Apps
-        """
-        return self.get_app_targets_for_app_admin_by_id(user.id, rid, limit)
-
-    def get_app_targets_for_app_admin_by_id(self, uid, rid, limit=None):
+    def get_app_targets_for_app_admin(self, uid, rid, limit=None):
         """Get a list of app targets for an APP_ADMIN role assignment
 
         :param uid: the user id
@@ -234,20 +152,7 @@ class AdminRolesClient(ApiClient):
         # TODO: create Catalog App Model
         return Utils.deserialize(response.text, AppInstance)
 
-    def add_app_target_to_app_admin(self, user, rid, appname):
-        """Add an app target for an APP_ADMIN role assignment
-
-        :param user: the user
-        :type user: User
-        :param rid: the APP_ADMIN role id
-        :type rid: str
-        :param appname: the name of the app to be added
-        :type appname: str
-        :rtype: None
-        """
-        return self.add_app_target_to_app_admin_by_id(user.id, rid, appname)
-
-    def add_app_target_to_app_admin_by_id(self, uid, rid, appname):
+    def add_app_target_to_app_admin(self, uid, rid, appname):
         """Add an app target for an APP_ADMIN role assignment
 
         :param uid: the user id
@@ -261,20 +166,7 @@ class AdminRolesClient(ApiClient):
         url = '/{0}/roles/{1}/targets/catalog/apps/{2}'.format(uid, rid, appname)
         ApiClient.put_path(self, url)
 
-    def delete_app_target_to_app_admin(self, user, rid, appname):
-        """Delete an app target for an APP_ADMIN role assignment
-
-        :param user: the user
-        :type user: User
-        :param rid: the APP_ADMIN role id
-        :type rid: str
-        :param appname: the name of the app to be added
-        :type appname: str
-        :rtype: None
-        """
-        return self.delete_app_target_to_app_admin_by_id(user.id, rid, appname)
-
-    def delete_app_target_to_app_admin_by_id(self, uid, rid, appname):
+    def delete_app_target_to_app_admin(self, uid, rid, appname):
         """Delete an app target for an APP_ADMIN role assignment
 
         :param uid: the user id
