@@ -6,6 +6,10 @@ from okta.models.app.Settings import Settings
 from okta.models.app.AppSettings import AppSettings
 
 
+class AppLinks:
+    pass
+
+
 class AppInstance:
 
     types = {
@@ -21,7 +25,8 @@ class AppInstance:
         'accessibility': Accessibility,
         'visibility': Visibility,
         'credentials': AppCredentials,
-        'settings': Settings
+        'settings': Settings,
+        '_links': AppLinks,
     }
 
     def __init__(self):
