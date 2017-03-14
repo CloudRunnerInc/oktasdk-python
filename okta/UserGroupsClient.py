@@ -1,7 +1,9 @@
 from okta.framework.ApiClient import ApiClient
 from okta.framework.Utils import Utils
-from okta.models.usergroup.UserGroup import UserGroup
 from okta.framework.PagedResults import PagedResults
+
+from okta.models.usergroup.UserGroup import UserGroup
+from okta.models.user.User import User
 
 
 class UserGroupsClient(ApiClient):
@@ -121,3 +123,45 @@ class UserGroupsClient(ApiClient):
         :return: None
         """
         response = ApiClient.put_path(self, '/{0}/users/{1}'.format(gid, uid))
+
+    def get_group_members(self, gid, limit=None, after=None):
+        """Get a list of users from a group
+
+        :param gid: the group id
+        :type gid: str
+        :param limit: maximum number of users to return
+        :type limit: int or None
+        :param after: user id that filtering will resume after
+        :type after: str
+        :rtype: list of User
+        """
+        params = {
+            'limit': limit,
+            'after': after
+        }
+        response = ApiClient.get_path(self, '/{0}/users'.format(gid), params=params)
+        return Utils.deserialize(response.text, User)
+
+    def get_paged_group_members(self, gid, url=None, limit=None, after=None):
+        """Get a paged list of users from a group
+
+        :param gid: the group id
+        :type gid: str
+        :param limit: maximum number of users to return
+        :type limit: int or None
+        :param after: user id that filtering will resume after
+        :type after: str
+        :param url: url that returns a list of User
+        :type url: str
+        :rtype: PagedResults of User
+        """
+        if url:
+            response = ApiClient.get(self, url)
+
+        else:
+            params = {
+                'limit': limit,
+                'after': after
+            }
+            response = ApiClient.get_path(self, '/{0}/users'.format(gid), params=params)
+        return PagedResults(response, User)
