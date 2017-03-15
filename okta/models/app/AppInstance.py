@@ -4,10 +4,8 @@ from okta.models.app.Visibility import Visibility
 from okta.models.app.AppCredentials import AppCredentials
 from okta.models.app.Settings import Settings
 from okta.models.app.AppSettings import AppSettings
-
-
-class AppLinks:
-    pass
+from okta.models.Link import Link
+from okta.models.Embedded import Embedded
 
 
 class AppInstance:
@@ -26,7 +24,11 @@ class AppInstance:
         'visibility': Visibility,
         'credentials': AppCredentials,
         'settings': Settings,
-        '_links': AppLinks,
+    }
+
+    dict_types = {
+        '_links': Link,
+        '_embedded': Embedded,
     }
 
     def __init__(self):
@@ -65,6 +67,10 @@ class AppInstance:
         self.credentials = None  # AppCredentials
 
         self.settings = None  # Settings
+
+        self._links = None  # Link
+
+        self._embedded = None  # Embedded
 
     @staticmethod
     def build_bookmark(url, label=None, request_integration=False):
