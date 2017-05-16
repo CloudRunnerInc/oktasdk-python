@@ -17,14 +17,14 @@ class UsersClient(ApiClient):
 
     # CRUD
 
-    def get_users(self, limit=None, query=None, filter_string=None,
+    def get_users(self, limit=None, q=None, filter_string=None,
                   search_string=None):
         """Get a list of Users
 
         :param limit: maximum number of users to return
         :type limit: int or None
-        :param query: string to search users' first names, last names, and emails
-        :type query: str or None
+        :param q: string to search users' first names, last names, and emails
+        :type q: str or None
         :param filter_string: string to filter users
         :type filter_string: str or None
         :param search_string: string to search users
@@ -33,7 +33,7 @@ class UsersClient(ApiClient):
         """
         params = {
             'limit': limit,
-            'query': query,
+            'q': q,
             'filter': filter_string,
             'search': search_string,
         }
