@@ -22,16 +22,21 @@ class AdminRolesClient(ApiClient):
         response = ApiClient.get_path(self, '/{0}/roles'.format(uid))
         return Utils.deserialize(response.text, Role)
 
-    def assign_admin_role_to_user(self, uid, rid):
+    def assign_admin_role_to_user(self, uid, role):
         """Assign an admin role for a single user
 
         :param uid: the user id
         :type uid: str
-        :param rid: the role id to be assigned to user
-        :type rid: str
+        :param role: the role to be assigned to user
+        :type role: str
         :rtype: Role
         """
-        response = ApiClient.post_path(self, '/{0}/roles'.format(uid), rid)
+        data = {
+            'type': role
+        }
+
+        url_path = '/{0}/roles'.format(uid)
+        response = ApiClient.post_path(self, url_path, data=data)
         return Utils.deserialize(response.text, Role)
 
     def unassign_admin_role_to_user(self, uid, rid):
