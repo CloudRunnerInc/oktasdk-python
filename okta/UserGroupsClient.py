@@ -12,27 +12,32 @@ class UserGroupsClient(ApiClient):
 
     # CRUD
 
-    def get_groups(self, limit=None, query=None):
+    def get_groups(self, limit=None, filter_string=None, query=None):
         """Get a list of UserGroups
 
         :param limit: maximum number of groups to return
         :type limit: int or None
+        :param filter_string: Filter expression for groups
+        :type filter_string: str or None
         :param query: string to search group names
         :type query: str or None
         :rtype: list of UserGroup
         """
         params = {
             'limit': limit,
+            'filter': filter_string,
             'q': query
         }
         response = ApiClient.get_path(self, '/', params=params)
         return Utils.deserialize(response.text, UserGroup)
 
-    def get_paged_groups(self, limit=None, after=None, url=None):
+    def get_paged_groups(self, limit=None, filter_string=None, after=None, url=None):
         """Get a paged list of UserGroups
 
         :param limit: maximum number of groups to return
         :type limit: int or None
+        :param filter_string: Filter expression for groups
+        :type filter_string: str or None
         :param after: group id that filtering will resume after
         :type after: str
         :param url: url that returns a list of UserGroup
@@ -45,6 +50,7 @@ class UserGroupsClient(ApiClient):
         else:
             params = {
                 'limit': limit,
+                'filter': filter_string,
                 'after': after
             }
             response = ApiClient.get_path(self, '/', params=params)
