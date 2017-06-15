@@ -3,6 +3,7 @@ from okta.framework.Utils import Utils
 from okta.framework.PagedResults import PagedResults
 
 from okta.models.usergroup.UserGroup import UserGroup
+from okta.models.usergroup.UserGroupRule import UserGroupRule
 from okta.models.user.User import User
 
 
@@ -171,3 +172,68 @@ class UserGroupsClient(ApiClient):
             }
             response = ApiClient.get_path(self, '/{0}/users'.format(gid), params=params)
         return PagedResults(response, User)
+
+    # Group Rules
+    def create_group_rule(self, name=None, expression=None, groupid=None, rule=None):
+        """Creates a group rule to dynamically add users to the specified
+            group if they match the condition
+
+        :param name: Name of group rule
+        :type name: str
+        :param expression: Expression to be used by group rule
+        :type name: str
+        :param groupid: Group ID of the group to assign the group rule
+        :type groupid: str
+        :param rule: UserGroupRule to be created
+        :type rule: UserGroupRule
+        :rtype: UserGroupRule
+        """
+        if rule:
+            data = rule
+        else:
+            data = UserGroupRule()
+            data.type = "group_rule"
+            data.name = name
+            data.conditions = {
+                'expression': {
+                    'value': expression,
+                    'type': "urn:okta:expression:1.0",
+                }
+            }
+
+            data.actions = {
+                'assignUserToGroups': {
+                    'groupIds': [groupid],
+                }
+            }
+
+        response = ApiClient.post_path(self, '/rules', data=data)
+        return Utils.deserialize(response.text, UserGroupRule)
+
+    def activate_group_rule(self, rid):
+        """Activates a specific group rule by id from your organization
+
+        :param rid: Id of the rule to be activated
+        :type rid: str
+        :return: None
+        """
+        return ApiClient.post_path(self, '/rules/{0}/lifecycle/activate'.format(rid))
+
+    def deactivate_group_rule(self, rid):
+        """Deactivates a specific group rule by id from your organization
+
+        :param rid: Id of the rule to be deactivated
+        :type rid: str
+        :return: None
+        """
+        return ApiClient.post_path(self, '/rules/{0}/lifecycle/deactivate'.format(rid))
+
+    def delete_group_rule(self, rid):
+        """Removes a specific group rule by id from your organization
+
+        :param rid: Id of the rule to be deleted
+        :type rid: str
+        :return: None
+        """
+        return ApiClient.delete_path(self, '/rules/{0}'.format(rid))
+
