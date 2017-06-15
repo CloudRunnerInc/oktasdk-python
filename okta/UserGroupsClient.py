@@ -89,14 +89,27 @@ class UserGroupsClient(ApiClient):
         response = ApiClient.put_path(self, '/{0}'.format(gid), group)
         return Utils.deserialize(response.text, UserGroup)
 
-    def create_group(self, group):
+    def create_group(self, group=None, name=None, description=None):
         """Create a group
 
         :param group: the data to create a group
         :type group: UserGroup
+        :param name: Name of the group to be created
+        :type name: str
+        :param description: Description of the group to be created
+        :type description: str
         :rtype: UserGroup
         """
-        response = ApiClient.post_path(self, '/', group)
+        if group:
+            data = group
+        else:
+            data = UserGroup()
+            data.profile = {
+                    "name": name,
+                    "description": description
+            }
+
+        response = ApiClient.post_path(self, '/', data)
         return Utils.deserialize(response.text, UserGroup)
 
     def delete_group(self, gid):
