@@ -1,3 +1,4 @@
+import json
 from okta.models.app.AppUser import AppUser
 from okta.framework.ApiClient import ApiClient
 from okta.framework.Utils import Utils
@@ -124,6 +125,16 @@ class AppInstanceClient(ApiClient):
         ApiClient.post_path(self, '/{0}/lifecycle/deactivate'.format(id), None)
 
     # USER
+
+    def get_app_assignments_for_user(self, user):
+        if hasattr(user, 'id'):
+            uid = user.id
+        else:
+            uid = user
+        path = "/?filter=user.id+eq+\"{uid}\"&expand=user/{uid}".format(
+            uid=uid)
+        response = ApiClient.get_path(self, path, params={})
+        return json.loads(response.text)
 
     def get_assigned_user_by_id_to_app(self, aid, uid):
         """Get the assigned user to an application by user id
