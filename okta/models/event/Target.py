@@ -1,3 +1,6 @@
+from copy import copy
+
+
 class Target:
 
     types = {
@@ -16,3 +19,27 @@ class Target:
 
         # User, Client, or AppInstance
         self.objectType = None  # str
+
+
+class UserTarget(Target):
+
+    types = copy(Target.types)
+    types.update({
+        'login': str
+    })
+
+    def __init__(self):
+        # Username
+        self.login = None  # str
+
+
+class ClientTarget(Target, object):
+
+    types = copy(Target.types)
+    types.update({
+        'ipAddress': str
+    })
+
+    def __init__(self):
+        # Client's IP Address
+        self.ipAddress = None  # str

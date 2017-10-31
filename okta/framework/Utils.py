@@ -3,7 +3,7 @@ import dateutil.parser
 from datetime import datetime
 import types
 import six
-import inspect
+from okta.models.event.Target import Target, UserTarget, ClientTarget
 
 
 class Utils(object):
@@ -49,6 +49,13 @@ class Utils(object):
 
                         elif attr_type == str or attr_type == int or attr_type == dict or attr_type == bool:
                             pass
+
+                        elif attr_type == Target:
+                            for target in val:
+                                if target['objectType'] == 'User':
+                                    attr_type = UserTarget
+                                elif target['objectType'] == 'Client':
+                                    attr_type = ClientTarget
 
                         else:
                             val = Utils.deserialize(val, attr_type)
