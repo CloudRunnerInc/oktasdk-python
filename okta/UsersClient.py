@@ -187,6 +187,21 @@ class UsersClient(ApiClient):
         response = ApiClient.post_path(self, '/{0}/lifecycle/activate'.format(uid), params=params)
         return Utils.deserialize(response.text, ActivationResponse)
 
+    def reactivate_user(self, uid, send_email=True):
+        """Reactivate user by target id
+
+        :param uid: the target user id
+        :type uid: str
+        :param send_email: sends an activation email to the user
+        :type send_email: bool
+        :return: None or ActivationResponse
+        """
+        params = {
+            'sendEmail': send_email,
+        }
+        response = ApiClient.post_path(self, '/{0}/lifecycle/reactivate'.format(uid), params=params)
+        return Utils.deserialize(response.text, ActivationResponse)
+
     def deactivate_user(self, uid):
         """Deactivate user by target id
 
@@ -220,6 +235,21 @@ class UsersClient(ApiClient):
             'sendEmail': send_email
         }
         response = ApiClient.post_path(self, '/{0}/lifecycle/reset_password'.format(uid), params=params)
+        return Utils.deserialize(response.text, ResetPasswordToken)
+
+    def forgot_password(self, uid, send_email=True):
+        """Generates a one time token that can be used to reset a user's password. Validates user's security question.
+
+        :param uid: the target user id
+        :type uid: str
+        :param send_email: whether a password reset email should be sent
+        :type send_email: bool
+        :return None or ResetPasswordToken
+        """
+        params = {
+            'sendEmail': send_email
+        }
+        response = ApiClient.post_path(self, '/{0}/lifecycle/forgot_password'.format(uid), params=params)
         return Utils.deserialize(response.text, ResetPasswordToken)
 
     def change_password(self, uid, old_password, new_password):
