@@ -216,3 +216,15 @@ class AppInstanceClient(ApiClient):
         }
         response = ApiClient.post_path(self, '/{0}/users'.format(aid), params)
         return Utils.deserialize(response.text, AppUser)
+
+    def unassign_user_by_id_from_app(self, aid, uid):
+        """Unassigns a user from an application
+
+        :param aid: the target app id
+        :type aid: str
+        :param uid: the target user id
+        :type uid: str
+        :rtype: None
+        """
+        response = ApiClient.delete_path(self, '/{0}/users/{1}'.format(aid, uid))
+        return response.text
