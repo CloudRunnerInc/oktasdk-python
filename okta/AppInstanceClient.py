@@ -148,6 +148,28 @@ class AppInstanceClient(ApiClient):
         response = ApiClient.get_path(self, '/{0}/users/{1}'.format(aid, uid))
         return Utils.deserialize(response.text, AppUser)
 
+    def update_app_credentials_for_user(self, aid, uid, username, password):
+        """Get the assigned user to an application by user id
+
+        :param aid: the target app id
+        :type aid: str
+        :param uid: the target user id
+        :type uid: str
+        :param username: the target user username
+        :type username: str
+        :param password: the target user password
+        :type password: str
+        """
+        params = {
+            'credentials': {
+                'userName': username,
+                'password': {
+                    'value': password
+                }
+            }
+        }
+        ApiClient.post_path(self, '/{0}/users/{1}'.format(aid, uid), params)
+
     def get_assigned_user_to_app(self, aid, user):
         """Get the assigned user to an application
 
@@ -194,3 +216,15 @@ class AppInstanceClient(ApiClient):
         }
         response = ApiClient.post_path(self, '/{0}/users'.format(aid), params)
         return Utils.deserialize(response.text, AppUser)
+
+    def unassign_user_by_id_from_app(self, aid, uid):
+        """Unassigns a user from an application
+
+        :param aid: the target app id
+        :type aid: str
+        :param uid: the target user id
+        :type uid: str
+        :rtype: None
+        """
+        response = ApiClient.delete_path(self, '/{0}/users/{1}'.format(aid, uid))
+        return response.text
