@@ -40,6 +40,22 @@ class AuthClient(ApiClient):
         response = ApiClient.post_path(self, '/', request, params=params)
         return Utils.deserialize(response.text, AuthResult)
 
+    def auth_with_activation_token(self, activation_token):
+        """Authenticate with an activation token as part of new user registration
+
+        :param activation_token: activation token emailed to user
+        :type activation_token: str
+
+        :rtype: AuthResult
+        """
+
+        request = {
+            'token': activation_token
+        }
+
+        response = ApiClient.post_path(self, '/', request)
+        return Utils.deserialize(response.text, AuthResult)
+
     def auth_with_factor(self, state_token, factor_id, passcode,
                          relay_state=None, remember_device=None):
         """Continue authentication with an MFA attempt
