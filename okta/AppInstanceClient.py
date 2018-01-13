@@ -28,7 +28,8 @@ class AppInstanceClient(ApiClient):
         response = ApiClient.get_path(self, '/', params=params)
         return Utils.deserialize(response.text, AppInstance)
 
-    def get_paged_app_instances(self, limit=None, filter_string=None, after=None, url=None):
+    def get_paged_app_instances(
+            self, limit=None, filter_string=None, after=None, url=None):
         """Get a paged list of AppInstances
 
         :param limit: maximum number of apps to return
@@ -191,28 +192,34 @@ class AppInstanceClient(ApiClient):
         response = ApiClient.get_path(self, '/{0}/users'.format(aid))
         return Utils.deserialize(response.text, AppUser)
 
-    def assign_user_to_app_for_SSO(self, aid, user):
+    def assign_user_to_app_for_SSO(self, aid, user, app_user_data={}):
         """Assigns a user to an application for SSO
 
         :param aid: the target app id
         :type aid: str
         :param user: the target User
         :type user: User
+        :param app_user_data: additional profile data for the app user
+        :type app_user_data: dict
         :rtype: AppUser
         """
-        return self.assign_user_by_id_to_app_for_SSO(aid, user.id)
+        return self.assign_user_by_id_to_app_for_SSO(
+            aid, user.id, app_user_data)
 
-    def assign_user_by_id_to_app_for_SSO(self, aid, uid):
+    def assign_user_by_id_to_app_for_SSO(self, aid, uid, app_user_data={}):
         """Assigns a user to an application for SSO
 
         :param aid: the target app id
         :type aid: str
         :param uid: the target user id
         :type uid: str
+        :param app_user_data: additional profile data for the app user
+        :type app_user_data: dict
         :rtype: AppUser
         """
         params = {
             'id': uid,
+            'profile': app_user_data
         }
         response = ApiClient.post_path(self, '/{0}/users'.format(aid), params)
         return Utils.deserialize(response.text, AppUser)
