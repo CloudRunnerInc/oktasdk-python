@@ -212,6 +212,26 @@ class UsersClient(ApiClient):
         response = ApiClient.post_path(self, '/{0}/lifecycle/deactivate'.format(uid))
         return Utils.deserialize(response.text, User)
 
+    def suspend_user(self, uid):
+        """Suspend user by target id
+
+        :param uid: the target user id
+        :type uid: str
+        :return: empty User
+        """
+        response = ApiClient.post_path(self, '/{0}/lifecycle/suspend'.format(uid))
+        return Utils.deserialize(response.text, User)
+
+    def unsuspend_user(self, uid):
+        """Unsuspend user by target id
+
+        :param uid: the target user id
+        :type uid: str
+        :return: empty User
+        """
+        response = ApiClient.post_path(self, '/{0}/lifecycle/unsuspend'.format(uid))
+        return Utils.deserialize(response.text, User)
+
     def unlock_user(self, uid):
         """Unlock user by target id
 
