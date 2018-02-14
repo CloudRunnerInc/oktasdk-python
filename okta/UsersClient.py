@@ -311,3 +311,13 @@ class UsersClient(ApiClient):
             }
             response = ApiClient.post_path(self, '/{0}/lifecycle/expire_password'.format(uid), params=params)
             return Utils.deserialize(response.text, TempPassword)
+
+    def clear_session(self, uid):
+        """Clear user's session by target user id
+
+        :param uid: the target user id
+        :type uid: str
+        :return: None
+        """
+        response = ApiClient.delete_path(self, '/{0}/sessions'.format(uid))
+        return Utils.deserialize(response.text, User)

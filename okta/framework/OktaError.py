@@ -11,3 +11,4 @@ class OktaError(Exception):
         self.error_id = error.get('errorId')
         self.error_link = error.get('errorLink')
         self.error_summary = error.get('errorSummary')
+        self.status_code = error.get('status_code')
