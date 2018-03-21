@@ -149,7 +149,7 @@ class AppInstanceClient(ApiClient):
         response = ApiClient.get_path(self, '/{0}/users/{1}'.format(aid, uid))
         return Utils.deserialize(response.text, AppUser)
 
-    def update_app_credentials_for_user(self, aid, uid, username, password):
+    def update_app_credentials_for_user(self, aid, uid, username=None, password=None):
         """Get the assigned user to an application by user id
 
         :param aid: the target app id
@@ -162,13 +162,13 @@ class AppInstanceClient(ApiClient):
         :type password: str
         """
         params = {
-            'credentials': {
-                'userName': username,
-                'password': {
-                    'value': password
-                }
-            }
+            'credentials': {}
         }
+        if username:
+            params['credentials']['userName'] = username
+        if password:
+            params['credentials']['password'] = {'value': password}
+
         ApiClient.post_path(self, '/{0}/users/{1}'.format(aid, uid), params)
 
     def get_assigned_user_to_app(self, aid, user):
