@@ -1,6 +1,7 @@
 class AppSettings:
 
     types = {
+        'domain': str,
         'url': str,
         'requestIntegration': bool,
         'authURL': str,
@@ -21,6 +22,8 @@ class AppSettings:
 
         # The URL of the login page for this app
         self.url = None  # str
+
+        self.domain = None  # str
 
         # Would you like Okta to add an integration for this app?
         self.requestIntegration = None  # bool
