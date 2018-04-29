@@ -2,6 +2,8 @@ class AppSettings:
 
     types = {
         'domain': str,
+        # come on, Okta, be consistent...
+        'subdomain': str,
         'url': str,
         'requestIntegration': bool,
         'authURL': str,
@@ -24,6 +26,8 @@ class AppSettings:
         self.url = None  # str
 
         self.domain = None  # str
+
+        self.subdomain = None  # str
 
         # Would you like Okta to add an integration for this app?
         self.requestIntegration = None  # bool
