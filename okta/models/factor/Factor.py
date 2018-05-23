@@ -1,5 +1,7 @@
 from datetime import datetime
 from okta.models.factor.FactorProfile import FactorProfile
+from okta.models.Link import Link
+from okta.models.factor.Embedded import Embedded
 
 
 class Factor:
@@ -12,6 +14,16 @@ class Factor:
         'created': datetime,
         'lastUpdated': datetime,
         'profile': FactorProfile
+    }
+
+    dict_types = {
+        '_links': Link,
+        '_embedded': Embedded
+    }
+
+    alt_names = {
+        '_links': 'links',
+        '_embedded': 'embedded'
     }
 
     def __init__(self):
