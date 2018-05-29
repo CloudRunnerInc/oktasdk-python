@@ -180,7 +180,7 @@ class AppInstanceClient(ApiClient):
         :type user: User
         :rtype: AppUser
         """
-        return self.get_assigned_user_to_app(aid, user.id)
+        return self.get_assigned_user_by_id_to_app(aid, user.id)
 
     def get_assigned_users_to_app(self, aid):
         """Get assigned users to an application
