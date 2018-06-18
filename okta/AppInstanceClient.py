@@ -132,7 +132,7 @@ class AppInstanceClient(ApiClient):
             uid = user.id
         else:
             uid = user
-        path = "/?filter=user.id+eq+\"{uid}\"&expand=user/{uid}".format(
+        path = "/?filter=user.id+eq+\"{uid}\"&expand=user/{uid}&limit=100".format(
             uid=uid)
         response = ApiClient.get_path(self, path, params={})
         return json.loads(response.text)
