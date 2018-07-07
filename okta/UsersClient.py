@@ -12,6 +12,8 @@ from okta.models.usergroup.UserGroup import UserGroup
 
 
 class UsersClient(ApiClient):
+    user_model = User
+
     def __init__(self, base_url, api_token):
         ApiClient.__init__(self, base_url + '/api/v1/users', api_token)
 
@@ -38,7 +40,7 @@ class UsersClient(ApiClient):
             'search': search_string,
         }
         response = ApiClient.get_path(self, '/', params=params)
-        return Utils.deserialize(response.text, User)
+        return Utils.deserialize(response.text, self.user_model)
 
     def get_user(self, uid):
         """Get a single user
@@ -48,7 +50,7 @@ class UsersClient(ApiClient):
         :rtype: User
         """
         response = ApiClient.get_path(self, '/{0}'.format(uid))
-        return Utils.deserialize(response.text, User)
+        return Utils.deserialize(response.text, self.user_model)
 
     def get_user_groups(self, uid):
         """Get the groups a single user is a member of
@@ -98,7 +100,7 @@ class UsersClient(ApiClient):
         :rtype: User
         """
         response = ApiClient.put_path(self, '/{0}'.format(uid), user)
-        return Utils.deserialize(response.text, User)
+        return Utils.deserialize(response.text, self.user_model)
 
     def update_user_by_id_partially(self, uid, user):
         """Partially update a user, defined by an id
@@ -110,7 +112,7 @@ class UsersClient(ApiClient):
         :rtype: User
         """
         response = ApiClient.post_path(self, '/{0}'.format(uid), user)
-        return Utils.deserialize(response.text, User)
+        return Utils.deserialize(response.text, self.user_model)
 
     def create_user(self, user, activate=False):
         """Create a user
@@ -128,7 +130,7 @@ class UsersClient(ApiClient):
                 'activate': activate
             }
             response = ApiClient.post_path(self, '/', user, params=params)
-        return Utils.deserialize(response.text, User)
+        return Utils.deserialize(response.text, self.user_model)
 
     def delete_user(self, uid):
         """Delete user by target id
@@ -138,7 +140,7 @@ class UsersClient(ApiClient):
         :return: None
         """
         response = ApiClient.delete_path(self, '/{0}'.format(uid))
-        return Utils.deserialize(response.text, User)
+        return Utils.deserialize(response.text, self.user_model)
 
     def get_paged_users(self, limit=None, filter_string=None,
                         search_string=None, after=None, url=None):
@@ -168,10 +170,10 @@ class UsersClient(ApiClient):
             }
             response = ApiClient.get_path(self, '/', params=params)
 
-        return PagedResults(response, User)
+        return PagedResults(response, self.user_model)
 
     # LIFECYCLE
-    
+
     def activate_user(self, uid, send_email=True):
         """Activate user by target id
 
@@ -195,7 +197,7 @@ class UsersClient(ApiClient):
         :return: empty User
         """
         response = ApiClient.post_path(self, '/{0}/lifecycle/deactivate'.format(uid))
-        return Utils.deserialize(response.text, User)
+        return Utils.deserialize(response.text, self.user_model)
 
     def unlock_user(self, uid):
         """Unlock user by target id
@@ -205,7 +207,7 @@ class UsersClient(ApiClient):
         :return: User
         """
         response = ApiClient.post_path(self, '/{0}/lifecycle/unlock'.format(uid))
-        return Utils.deserialize(response.text, User)
+        return Utils.deserialize(response.text, self.user_model)
 
     def reset_password(self, uid, send_email=True):
         """Reset user's password by target user id
