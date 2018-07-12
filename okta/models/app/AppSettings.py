@@ -1,9 +1,16 @@
 class AppSettings:
 
     types = {
+        # Slack
         'domain': str,
         # come on, Okta, be consistent...
+        # T-Sheets
         'subDomain': str,
+        # Engagedly
+        'acsUrl': str, # ACS URL
+        'audRestriction': str, # Entity ID
+        # JIRA
+        'baseURL': str, # Your JIRA URL
         'url': str,
         'requestIntegration': bool,
         'authURL': str,
