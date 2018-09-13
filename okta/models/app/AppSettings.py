@@ -7,10 +7,12 @@ class AppSettings:
         # T-Sheets
         'subDomain': str,
         # Engagedly
-        'acsUrl': str, # ACS URL
-        'audRestriction': str, # Entity ID
+        'acsUrl': str,  # ACS URL
+        'audRestriction': str,  # Entity ID
         # JIRA
-        'baseURL': str, # Your JIRA URL
+        'baseURL': str,  # Your JIRA URL
+        # ADP Employee Self Service Portal
+        'companyName': str,  # Company Name
         'url': str,
         'requestIntegration': bool,
         'authURL': str,
