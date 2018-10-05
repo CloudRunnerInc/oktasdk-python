@@ -127,13 +127,14 @@ class AppInstanceClient(ApiClient):
 
     # USER
 
-    def get_app_assignments_for_user(self, user):
+    def get_app_assignments_for_user(self, user, expand_user=True):
         if hasattr(user, 'id'):
             uid = user.id
         else:
             uid = user
-        path = "/?filter=user.id+eq+\"{uid}\"&expand=user/{uid}&limit=100".format(
-            uid=uid)
+        expand_user_param = "&expand=user/{}".format(uid)
+        path = "/?filter=user.id+eq+\"{uid}\"{expand_user}&limit=100".format(
+            uid=uid, expand_user=expand_user_param if expand_user else "")
         response = ApiClient.get_path(self, path, params={})
         return json.loads(response.text)
 
