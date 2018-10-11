@@ -183,15 +183,32 @@ class AppInstanceClient(ApiClient):
         """
         return self.get_assigned_user_by_id_to_app(aid, user.id)
 
-    def get_assigned_users_to_app(self, aid):
+    def get_assigned_users_to_app(
+            self, aid, limit=None, after=None, filter_string=None, url=None):
         """Get assigned users to an application
-
         :param aid: the target app id
         :type aid: str
-        :rtype: Array of AppUser
+        :param limit: maximum number of apps to return
+        :type limit: int or None
+        :param filter_string: string to filter apps
+        :type filter_string: str or None
+        :param after: app id that filtering will resume after
+        :type after: str
+        :param url: url that returns a list of AppInstance
+        :type url: str
+        :rtype: PagedResults of User models
         """
-        response = ApiClient.get_path(self, '/{0}/users'.format(aid))
-        return Utils.deserialize(response.text, AppUser)
+        if url:
+            response = ApiClient.get(self, url)
+        else:
+            params = {
+                'limit': limit,
+                'after': after,
+                'filter': filter_string
+            }
+            response = ApiClient.get_path(
+                self, '/{0}/users'.format(aid), params=params)
+        return PagedResults(response, AppUser)
 
     def assign_user_to_app_for_SSO(self, aid, user, app_user_data={}):
         """Assigns a user to an application for SSO
