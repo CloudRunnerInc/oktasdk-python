@@ -18,3 +18,4 @@ from .SessionsClient import SessionsClient
 from .UserGroupsClient import UserGroupsClient
 from .UsersClient import UsersClient
 from .AdminRolesClient import AdminRolesClient
+from .SystemLogClient import SystemLogClient
