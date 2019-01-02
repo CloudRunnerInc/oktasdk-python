@@ -1,3 +1,4 @@
+import datetime
 import requests
 import json
 import time
@@ -98,7 +99,14 @@ class ApiClient(object):
         if d is None or len(d) == 0:
             return ''
 
+        def value_to_string(value):
+            if type(value) is bool:
+                return str(value).lower()
+            if type(value) is datetime.datetime:
+                return value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            return str(value)
+
         return '?{}'.format(urlencode({
-            param: str(value).lower() if type(value) == bool else str(value)
+            param: value_to_string(value)
             for param, value in six.iteritems(d) if value is not None
         }))
