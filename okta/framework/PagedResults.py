@@ -1,9 +1,10 @@
+import json
 from okta.framework.Utils import Utils
 
 
 class PagedResults(object):
 
-    def __init__(self, response, target_class):
+    def __init__(self, response, target_class=None):
         self.response = response
         self.__target_class = target_class
 
@@ -22,4 +23,6 @@ class PagedResults(object):
 
     @property
     def result(self):
-        return Utils.deserialize(self.response.text, self.__target_class)
+        if self.__target_class is not None:
+            return Utils.deserialize(self.response.text, self.__target_class)
+        return json.loads(self.response.text)
