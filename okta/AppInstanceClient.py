@@ -150,7 +150,8 @@ class AppInstanceClient(ApiClient):
         response = ApiClient.get_path(self, '/{0}/users/{1}'.format(aid, uid))
         return Utils.deserialize(response.text, AppUser)
 
-    def update_app_credentials_for_user(self, aid, uid, username=None, password=None):
+    def update_app_credentials_for_user(
+            self, aid, uid, username=None, password=None):
         """Get the assigned user to an application by user id
 
         :param aid: the target app id
@@ -251,5 +252,18 @@ class AppInstanceClient(ApiClient):
         :type uid: str
         :rtype: None
         """
-        response = ApiClient.delete_path(self, '/{0}/users/{1}'.format(aid, uid))
+        response = ApiClient.delete_path(self, '/{0}/users/{1}'.format(
+            aid, uid))
+        return response.text
+
+    def assign_group_to_app(self, aid, gid):
+        """Assigns a group to an application
+
+        :param aid: the target app id
+        :type aid: str
+        :param gid: the target group id
+        :type gid: str
+        :rtype: JSON response
+        """
+        response = ApiClient.put_path(self, '/{0}/groups/{1}'.format(aid, gid))
         return response.text
