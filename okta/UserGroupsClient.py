@@ -2,6 +2,7 @@ from okta.framework.ApiClient import ApiClient
 from okta.framework.Utils import Utils
 from okta.framework.PagedResults import PagedResults
 
+from okta.models.app.AppInstance import AppInstance
 from okta.models.usergroup.UserGroup import UserGroup
 from okta.models.usergroup.UserGroupRule import UserGroupRule
 from okta.models.user.User import User
@@ -249,4 +250,17 @@ class UserGroupsClient(ApiClient):
         :return: None
         """
         return ApiClient.delete_path(self, '/rules/{0}'.format(rid))
+
+    def get_paged_apps_assigned_to_group(self, gid, url=None, limit=None, after=None):
+        if url:
+            response = ApiClient.get(self, url)
+
+        else:
+            params = {
+                'limit': limit,
+                'after': after
+            }
+            response = ApiClient.get_path(self, '/{0}/apps'.format(gid), params=params)
+        return PagedResults(response, AppInstance)
+
 
