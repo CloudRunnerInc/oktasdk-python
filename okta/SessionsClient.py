@@ -5,8 +5,12 @@ from okta.models.session.Session import Session
 
 
 class SessionsClient(ApiClient):
-    def __init__(self, base_url, api_token):
-        ApiClient.__init__(self, base_url + '/api/v1/sessions', api_token)
+    def __init__(self, base_url, api_token, **kwargs):
+        super(SessionsClient, self).__init__(
+            base_url + '/api/v1/sessions',
+            api_token,
+            **kwargs
+        )
 
     # CRUD
 
@@ -25,7 +29,7 @@ class SessionsClient(ApiClient):
         creds.username = username
         creds.password = password
         params = {'additionalFields': additional_fields}
-        response = ApiClient.post_path(self, '/', creds, params=params)
+        response = self.post_path('/', creds, params=params)
         return Utils.deserialize(response.text, Session)
 
     def create_session_with_cookie_token(self, username, password):
@@ -61,7 +65,7 @@ class SessionsClient(ApiClient):
         """
         data = {'sessionToken': session_token}
         params = {'additionalFields': additional_fields}
-        response = ApiClient.post_path(self, '/', data, params=params)
+        response = self.post_path('/', data, params=params)
         return Utils.deserialize(response.text, Session)
 
     def validate_session(self, id):
@@ -70,7 +74,7 @@ class SessionsClient(ApiClient):
         :param id: the target session id
         :rtype: Session
         """
-        response = ApiClient.get_path(self, '/{0}'.format(id))
+        response = self.get_path('/{0}'.format(id))
         return Utils.deserialize(response.text, Session)
 
     def extend_session(self, id):
@@ -79,7 +83,7 @@ class SessionsClient(ApiClient):
         :param id: the target session id
         :rtype: Session
         """
-        response = ApiClient.put_path(self, '/{0}'.format(id), None)
+        response = self.put_path('/{0}'.format(id), None)
         return Utils.deserialize(response.text, Session)
 
     def clear_session(self, id):
@@ -88,4 +92,4 @@ class SessionsClient(ApiClient):
         :param id: the target session id
         :rtype: Session
         """
-        ApiClient.delete_path(self, '/{0}'.format(id))
+        self.delete_path('/{0}'.format(id))

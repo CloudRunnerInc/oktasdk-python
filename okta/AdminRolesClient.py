@@ -7,8 +7,12 @@ from okta.models.usergroup.UserGroup import UserGroup
 
 
 class AdminRolesClient(ApiClient):
-    def __init__(self, base_url, api_token):
-        ApiClient.__init__(self, base_url + '/api/v1/users/', api_token)
+    def __init__(self, base_url, api_token, **kwargs):
+        super(AdminRolesClient, self).__init__(
+            base_url + '/api/v1/users/',
+            api_token,
+            **kwargs
+        )
 
     # Assignment Operations
 
@@ -19,7 +23,7 @@ class AdminRolesClient(ApiClient):
         :type uid: str
         :rtype: Array of Role
         """
-        response = ApiClient.get_path(self, '/{0}/roles'.format(uid))
+        response = self.get_path('/{0}/roles'.format(uid))
         return Utils.deserialize(response.text, Role)
 
     def assign_admin_role_to_user(self, uid, role):
@@ -36,7 +40,7 @@ class AdminRolesClient(ApiClient):
         }
 
         url_path = '/{0}/roles'.format(uid)
-        response = ApiClient.post_path(self, url_path, data=data)
+        response = self.post_path(url_path, data=data)
         return Utils.deserialize(response.text, Role)
 
     def unassign_admin_role_to_user(self, uid, rid):
@@ -48,7 +52,7 @@ class AdminRolesClient(ApiClient):
         :type rid: str
         :rtype: None
         """
-        ApiClient.delete_path(self, '/{0}/roles/{1}'.format(uid, rid))
+        self.delete_path('/{0}/roles/{1}'.format(uid, rid))
 
     # Target Operations
 
@@ -68,14 +72,14 @@ class AdminRolesClient(ApiClient):
         :rtype: Array of UserGroup
         """
         if url:
-            response = ApiClient.get(self, url)
+            response = self.get(url)
 
         else:
             params = {
                 'limit': limit
             }
             url_path = '/{0}/roles/{1}/targets/groups'.format(uid, rid)
-            response = ApiClient.get_path(self, url_path, params=params)
+            response = self.get_path(url_path, params=params)
 
         return PagedResults(response, UserGroup)
 
@@ -94,7 +98,7 @@ class AdminRolesClient(ApiClient):
             'limit': limit
         }
         url = '/{0}/roles/{1}/targets/groups'.format(uid, rid)
-        response = ApiClient.get_path(self, url, params=params)
+        response = self.get_path(url, params=params)
         return Utils.deserialize(response.text, UserGroup)
 
     def add_group_target_to_user_admin(self, uid, rid, gid):
@@ -109,7 +113,7 @@ class AdminRolesClient(ApiClient):
         :rtype: None
         """
         url = '/{0}/roles/{1}/targets/groups/{2}'.format(uid, rid, gid)
-        ApiClient.put_path(self, url)
+        self.put_path(url)
 
     # App targets
 
@@ -127,14 +131,14 @@ class AdminRolesClient(ApiClient):
         :rtype: Array of CatalogApp
         """
         if url:
-            response = ApiClient.get(self, url)
+            response = self.get(url)
 
         else:
             params = {
                 'limit': limit
             }
             url_path = '/{0}/roles/{1}/targets/catalog/apps'.format(uid, rid)
-            response = ApiClient.get_path(self, url_path, params=params)
+            response = self.get_path(url_path, params=params)
         # TODO: create Catalog App Model
         return PagedResults(response, AppInstance)
 
@@ -153,7 +157,7 @@ class AdminRolesClient(ApiClient):
             'limit': limit
         }
         url = '/{0}/roles/{1}/targets/catalog/apps'.format(uid, rid)
-        response = ApiClient.get_path(self, url, params=params)
+        response = self.get_path(url, params=params)
         # TODO: create Catalog App Model
         return Utils.deserialize(response.text, AppInstance)
 
@@ -169,7 +173,7 @@ class AdminRolesClient(ApiClient):
         :rtype: None
         """
         url = '/{0}/roles/{1}/targets/catalog/apps/{2}'.format(uid, rid, appname)
-        ApiClient.put_path(self, url)
+        self.put_path(url)
 
     def delete_app_target_to_app_admin(self, uid, rid, appname):
         """Delete an app target for an APP_ADMIN role assignment
@@ -183,5 +187,4 @@ class AdminRolesClient(ApiClient):
         :rtype: None
         """
         url = '/{0}/roles/{1}/targets/catalog/apps/{2}'.format(uid, rid, appname)
-        ApiClient.delete_path(self, url)
-
+        self.delete_path(url)

@@ -7,8 +7,12 @@ from okta.models.app.AppInstance import AppInstance
 
 
 class AppInstanceClient(ApiClient):
-    def __init__(self, base_url, api_token):
-        ApiClient.__init__(self, base_url + '/api/v1/apps', api_token)
+    def __init__(self, base_url, api_token, **kwargs):
+        super(AppInstanceClient, self).__init__(
+            base_url + '/api/v1/apps',
+            api_token,
+            **kwargs
+        )
 
     # CRUD
 
@@ -25,7 +29,7 @@ class AppInstanceClient(ApiClient):
             'limit': limit,
             'filter': filter_string
         }
-        response = ApiClient.get_path(self, '/', params=params)
+        response = self.get_path('/', params=params)
         return Utils.deserialize(response.text, AppInstance)
 
     def get_paged_app_instances(
@@ -43,7 +47,7 @@ class AppInstanceClient(ApiClient):
         :rtype: PagedResults of AppInstance
         """
         if url:
-            response = ApiClient.get(self, url)
+            response = self.get(url)
 
         else:
             params = {
@@ -51,7 +55,7 @@ class AppInstanceClient(ApiClient):
                 'after': after,
                 'filter': filter_string
             }
-            response = ApiClient.get_path(self, '/', params=params)
+            response = self.get_path('/', params=params)
 
         return PagedResults(response, AppInstance)
 
@@ -62,7 +66,7 @@ class AppInstanceClient(ApiClient):
         :type app_instance: AppInstance
         :rtype: AppInstance
         """
-        response = ApiClient.post_path(self, '/', app_instance)
+        response = self.post_path('/', app_instance)
         return Utils.deserialize(response.text, AppInstance)
 
     def get_app_instance(self, id):
@@ -72,7 +76,7 @@ class AppInstanceClient(ApiClient):
         :type id: str
         :rtype: AppInstance
         """
-        response = ApiClient.get_path(self, '/{0}'.format(id))
+        response = self.get_path('/{0}'.format(id))
         return Utils.deserialize(response.text, AppInstance)
 
     def update_app_instance(self, app_instance):
@@ -93,7 +97,7 @@ class AppInstanceClient(ApiClient):
         :type app_instance: AppInstance
         :rtype: AppInstance
         """
-        response = ApiClient.put_path(self, '/{0}'.format(id), app_instance)
+        response = self.put_path('/{0}'.format(id), app_instance)
         return Utils.deserialize(response.text, AppInstance)
 
     def delete_app_instance(self, id):
@@ -103,7 +107,7 @@ class AppInstanceClient(ApiClient):
         :type id: str
         :return: None
         """
-        ApiClient.delete_path(self, '/{0}'.format(id))
+        self.delete_path('/{0}'.format(id))
 
     # LIFECYCLE
 
@@ -114,7 +118,7 @@ class AppInstanceClient(ApiClient):
         :type id: str
         :return: None
         """
-        ApiClient.post_path(self, '/{0}/lifecycle/activate'.format(id), None)
+        self.post_path('/{0}/lifecycle/activate'.format(id), None)
 
     def deactivate_app_instance(self, id):
         """Deactivate app by target id
@@ -123,7 +127,7 @@ class AppInstanceClient(ApiClient):
         :type id: str
         :return: None
         """
-        ApiClient.post_path(self, '/{0}/lifecycle/deactivate'.format(id), None)
+        self.post_path('/{0}/lifecycle/deactivate'.format(id), None)
 
     # USER
 
@@ -135,7 +139,7 @@ class AppInstanceClient(ApiClient):
         expand_user_param = "&expand=user/{}".format(uid)
         path = "/?filter=user.id+eq+\"{uid}\"{expand_user}&limit=100".format(
             uid=uid, expand_user=expand_user_param if expand_user else "")
-        response = ApiClient.get_path(self, path, params={})
+        response = self.get_path(path, params={})
         return json.loads(response.text)
 
     def get_assigned_user_by_id_to_app(self, aid, uid):
@@ -147,7 +151,7 @@ class AppInstanceClient(ApiClient):
         :type uid: str
         :rtype: AppUser
         """
-        response = ApiClient.get_path(self, '/{0}/users/{1}'.format(aid, uid))
+        response = self.get_path('/{0}/users/{1}'.format(aid, uid))
         return Utils.deserialize(response.text, AppUser)
 
     def update_app_credentials_for_user(
@@ -171,7 +175,7 @@ class AppInstanceClient(ApiClient):
         if password:
             params['credentials']['password'] = {'value': password}
 
-        ApiClient.post_path(self, '/{0}/users/{1}'.format(aid, uid), params)
+        self.post_path('/{0}/users/{1}'.format(aid, uid), params)
 
     def get_assigned_user_to_app(self, aid, user):
         """Get the assigned user to an application
@@ -200,15 +204,14 @@ class AppInstanceClient(ApiClient):
         :rtype: PagedResults of User models
         """
         if url:
-            response = ApiClient.get(self, url)
+            response = self.get(url)
         else:
             params = {
                 'limit': limit,
                 'after': after,
                 'filter': filter_string
             }
-            response = ApiClient.get_path(
-                self, '/{0}/users'.format(aid), params=params)
+            response = self.get_path('/{0}/users'.format(aid), params=params)
         return PagedResults(response, AppUser)
 
     def assign_user_to_app_for_SSO(self, aid, user, app_user_data={}):
@@ -240,7 +243,7 @@ class AppInstanceClient(ApiClient):
             'id': uid,
             'profile': app_user_data
         }
-        response = ApiClient.post_path(self, '/{0}/users'.format(aid), params)
+        response = self.post_path('/{0}/users'.format(aid), params)
         return Utils.deserialize(response.text, AppUser)
 
     def unassign_user_by_id_from_app(self, aid, uid):
@@ -252,7 +255,7 @@ class AppInstanceClient(ApiClient):
         :type uid: str
         :rtype: None
         """
-        response = ApiClient.delete_path(self, '/{0}/users/{1}'.format(
+        response = self.delete_path('/{0}/users/{1}'.format(
             aid, uid))
         return response.text
 
@@ -265,5 +268,5 @@ class AppInstanceClient(ApiClient):
         :type gid: str
         :rtype: JSON response
         """
-        response = ApiClient.put_path(self, '/{0}/groups/{1}'.format(aid, gid))
+        response = self.put_path('/{0}/groups/{1}'.format(aid, gid))
         return response.text

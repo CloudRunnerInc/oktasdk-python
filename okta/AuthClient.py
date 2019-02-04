@@ -4,8 +4,12 @@ from okta.models.auth.AuthResult import AuthResult
 
 
 class AuthClient(ApiClient):
-    def __init__(self, base_url, api_token):
-        ApiClient.__init__(self, base_url + '/api/v1/authn', api_token)
+    def __init__(self, base_url, api_token, **kwargs):
+        super(AuthClient, self).__init__(
+            base_url + '/api/v1/authn',
+            api_token,
+            **kwargs
+        )
 
     def authenticate(self, username, password,
                      relay_state=None, response_type=None, force_mfa=None, context=None):
@@ -37,7 +41,7 @@ class AuthClient(ApiClient):
             'response_type': response_type
         }
 
-        response = ApiClient.post_path(self, '/', request, params=params)
+        response = self.post_path('/', request, params=params)
         return Utils.deserialize(response.text, AuthResult)
 
     def auth_with_activation_token(self, activation_token):
@@ -53,7 +57,7 @@ class AuthClient(ApiClient):
             'token': activation_token
         }
 
-        response = ApiClient.post_path(self, '/', request)
+        response = self.post_path('/', request)
         return Utils.deserialize(response.text, AuthResult)
 
     def auth_with_factor(self, state_token, factor_id, passcode,
@@ -82,8 +86,8 @@ class AuthClient(ApiClient):
             'rememberDevice': remember_device
         }
 
-        response = ApiClient.post_path(self, '/factors/{0}/verify'.format(factor_id),
-                                      request, params=params)
+        response = self.post_path('/factors/{0}/verify'.format(factor_id),
+                                  request, params=params)
         return Utils.deserialize(response.text, AuthResult)
 
     # MFA MANAGEMENT
@@ -111,7 +115,7 @@ class AuthClient(ApiClient):
             'relayState': relay_state
         }
 
-        response = ApiClient.post_path(self, '/factors', request)
+        response = self.post_path('/factors', request)
         return Utils.deserialize(response.text, AuthResult)
 
     def activate_factor(self, state_token, factor_id, passcode, relay_state=None):
@@ -133,7 +137,7 @@ class AuthClient(ApiClient):
             'relayState': relay_state
         }
 
-        response = ApiClient.post_path(self, '/factors/{0}/lifecycle/activate'.format(factor_id), request)
+        response = self.post_path('/factors/{0}/lifecycle/activate'.format(factor_id), request)
         return Utils.deserialize(response.text, AuthResult)
 
     def resend_code(self, state_token, factor_id, relay_state=None):
@@ -152,7 +156,7 @@ class AuthClient(ApiClient):
             'relayState': relay_state
         }
 
-        response = ApiClient.post_path(self, '/factors/{0}/lifecycle/resend'.format(factor_id), request)
+        response = self.post_path('/factors/{0}/lifecycle/resend'.format(factor_id), request)
         return Utils.deserialize(response.text, AuthResult)
 
     # CREDENTIAL MANAGEMENT
@@ -177,7 +181,7 @@ class AuthClient(ApiClient):
             'relayState': relay_state
         }
 
-        response = ApiClient.post_path(self, '/credentials/change_password', request)
+        response = self.post_path('/credentials/change_password', request)
         return Utils.deserialize(response.text, AuthResult)
 
     def reset_password(self, state_token, new_password, relay_state=None):
@@ -197,7 +201,7 @@ class AuthClient(ApiClient):
             'relayState': relay_state
         }
 
-        response = ApiClient.post_path(self, '/credentials/reset_password', request)
+        response = self.post_path('/credentials/reset_password', request)
         return Utils.deserialize(response.text, AuthResult)
 
     def forgot_password(self, username, relay_state=None):
@@ -214,7 +218,7 @@ class AuthClient(ApiClient):
             'relayState': relay_state
         }
 
-        response = ApiClient.post_path(self, '/recovery/password', request)
+        response = self.post_path('/recovery/password', request)
         return Utils.deserialize(response.text, AuthResult)
 
     def forgot_password_answer(self, state_token, security_answer, new_password, relay_state=None):
@@ -237,7 +241,7 @@ class AuthClient(ApiClient):
             'relayState': relay_state
         }
 
-        response = ApiClient.post_path(self, '/recovery/answer', request)
+        response = self.post_path('/recovery/answer', request)
         return Utils.deserialize(response.text, AuthResult)
 
     # RECOVERY
@@ -256,7 +260,7 @@ class AuthClient(ApiClient):
             'relayState': relay_state
         }
 
-        response = ApiClient.post_path(self, '/recovery/token', request)
+        response = self.post_path('/recovery/token', request)
         return Utils.deserialize(response.text, AuthResult)
 
     def unlock_account(self, username, relay_state=None):
@@ -273,7 +277,7 @@ class AuthClient(ApiClient):
             'relayState': relay_state
         }
 
-        response = ApiClient.post_path(self, '/recovery/unlock', request)
+        response = self.post_path('/recovery/unlock', request)
         return Utils.deserialize(response.text, AuthResult)
 
     def unlock_account_answer(self, state_token, security_answer, relay_state=None):
@@ -293,7 +297,7 @@ class AuthClient(ApiClient):
             'relayState': relay_state
         }
 
-        response = ApiClient.post_path(self, '/recovery/answer', request)
+        response = self.post_path('/recovery/answer', request)
         return Utils.deserialize(response.text, AuthResult)
 
     # STATE MANAGEMENT
@@ -312,7 +316,7 @@ class AuthClient(ApiClient):
             'relayState': relay_state
         }
 
-        response = ApiClient.post_path(self, '/previous', request)
+        response = self.post_path('/previous', request)
         return Utils.deserialize(response.text, AuthResult)
 
     def get_status(self, state_token, relay_state=None):
@@ -329,7 +333,7 @@ class AuthClient(ApiClient):
             'relayState': relay_state
         }
 
-        response = ApiClient.post_path(self, '/', request)
+        response = self.post_path('/', request)
         return Utils.deserialize(response.text, AuthResult)
 
     def verify_transaction(self, factor_id, transaction_id, user_response):
@@ -347,5 +351,5 @@ class AuthClient(ApiClient):
             'result': user_response
         }
 
-        response = ApiClient.post_path(self, '/factors/{0}/transactions/{1}/verify'.format(factor_id, transaction_id), request)
+        response = self.post_path('/factors/{0}/transactions/{1}/verify'.format(factor_id, transaction_id), request)
         return Utils.deserialize(response.text, AuthResult)

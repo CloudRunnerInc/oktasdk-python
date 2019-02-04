@@ -5,8 +5,12 @@ from okta.framework.PagedResults import PagedResults
 
 
 class EventsClient(ApiClient):
-    def __init__(self, base_url, api_token):
-        ApiClient.__init__(self, base_url + '/api/v1/events', api_token)
+    def __init__(self, base_url, api_token, **kwargs):
+        super(EventsClient, self).__init__(
+            base_url + '/api/v1/events',
+            api_token,
+            **kwargs
+        )
 
     def get_events(self, limit=None, start_date=None, filter_string=None):
         """Get a list of Events
@@ -22,7 +26,7 @@ class EventsClient(ApiClient):
             'startDate': start_date,
             'filter': filter_string
         }
-        response = ApiClient.get_path(self, '/', params=params)
+        response = self.get_path('/', params=params)
 
         return Utils.deserialize(response.text, Event)
 
@@ -40,7 +44,7 @@ class EventsClient(ApiClient):
         :rtype: PagedResults of Event
         """
         if url:
-            response = ApiClient.get(self, url)
+            response = self.get(url)
 
         else:
             params = {
@@ -49,6 +53,6 @@ class EventsClient(ApiClient):
                 'after': after,
                 'filter': filter_string
             }
-            response = ApiClient.get_path(self, '/', params=params)
+            response = self.get_path('/', params=params)
 
         return PagedResults(response, Event)

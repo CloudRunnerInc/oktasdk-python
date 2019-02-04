@@ -9,8 +9,12 @@ from okta.models.user.User import User
 
 
 class UserGroupsClient(ApiClient):
-    def __init__(self, base_url, api_token):
-        ApiClient.__init__(self, base_url + '/api/v1/groups', api_token)
+    def __init__(self, base_url, api_token, **kwargs):
+        super(UserGroupsClient, self).__init__(
+            base_url + '/api/v1/groups',
+            api_token,
+            **kwargs
+        )
 
     # CRUD
 
@@ -30,7 +34,7 @@ class UserGroupsClient(ApiClient):
             'filter': filter_string,
             'q': query
         }
-        response = ApiClient.get_path(self, '/', params=params)
+        response = self.get_path('/', params=params)
         return Utils.deserialize(response.text, UserGroup)
 
     def get_paged_groups(self, limit=None, filter_string=None, after=None, url=None):
@@ -47,7 +51,7 @@ class UserGroupsClient(ApiClient):
         :rtype: PagedResults of UserGroup
         """
         if url:
-            response = ApiClient.get(self, url)
+            response = self.get(url)
 
         else:
             params = {
@@ -55,7 +59,7 @@ class UserGroupsClient(ApiClient):
                 'filter': filter_string,
                 'after': after
             }
-            response = ApiClient.get_path(self, '/', params=params)
+            response = self.get_path('/', params=params)
 
         return PagedResults(response, UserGroup)
 
@@ -66,7 +70,7 @@ class UserGroupsClient(ApiClient):
         :type gid: str
         :rtype: UserGroup
         """
-        response = ApiClient.get_path(self, '/{0}'.format(gid))
+        response = self.get_path('/{0}'.format(gid))
         return Utils.deserialize(response.text, UserGroup)
 
     def update_group(self, group):
@@ -87,7 +91,7 @@ class UserGroupsClient(ApiClient):
         :type group: UserGroup
         :rtype: UserGroup
         """
-        response = ApiClient.put_path(self, '/{0}'.format(gid), group)
+        response = self.put_path('/{0}'.format(gid), group)
         return Utils.deserialize(response.text, UserGroup)
 
     def create_group(self, group=None, name=None, description=None):
@@ -110,7 +114,7 @@ class UserGroupsClient(ApiClient):
                     "description": description
             }
 
-        response = ApiClient.post_path(self, '/', data)
+        response = self.post_path('/', data)
         return Utils.deserialize(response.text, UserGroup)
 
     def delete_group(self, gid):
@@ -120,7 +124,7 @@ class UserGroupsClient(ApiClient):
         :type gid: str
         :return: None
         """
-        response = ApiClient.delete_path(self, '/{0}'.format(gid))
+        response = self.delete_path('/{0}'.format(gid))
         return Utils.deserialize(response.text, UserGroup)
 
     def add_user_to_group(self, group, user):
@@ -143,7 +147,7 @@ class UserGroupsClient(ApiClient):
         :type uid: str
         :return: None
         """
-        ApiClient.put_path(self, '/{0}/users/{1}'.format(gid, uid))
+        self.put_path('/{0}/users/{1}'.format(gid, uid))
 
     def delete_user_from_group(self, group, user):
         """Delete a user from a group
@@ -165,7 +169,7 @@ class UserGroupsClient(ApiClient):
         :type uid: str
         :return: None
         """
-        ApiClient.delete_path(self, '/{0}/users/{1}'.format(gid, uid))
+        self.delete_path('/{0}/users/{1}'.format(gid, uid))
 
     def get_group_members(self, gid, limit=None, after=None):
         """Get a list of users from a group
@@ -182,7 +186,7 @@ class UserGroupsClient(ApiClient):
             'limit': limit,
             'after': after
         }
-        response = ApiClient.get_path(self, '/{0}/users'.format(gid), params=params)
+        response = self.get_path('/{0}/users'.format(gid), params=params)
         return Utils.deserialize(response.text, User)
 
     def get_paged_group_members(self, gid, url=None, limit=None, after=None):
@@ -199,14 +203,14 @@ class UserGroupsClient(ApiClient):
         :rtype: PagedResults of User
         """
         if url:
-            response = ApiClient.get(self, url)
+            response = self.get(url)
 
         else:
             params = {
                 'limit': limit,
                 'after': after
             }
-            response = ApiClient.get_path(self, '/{0}/users'.format(gid), params=params)
+            response = self.get_path('/{0}/users'.format(gid), params=params)
         return PagedResults(response, User)
 
     # Group Rules
@@ -243,7 +247,7 @@ class UserGroupsClient(ApiClient):
                 }
             }
 
-        response = ApiClient.post_path(self, '/rules', data=data)
+        response = self.post_path('/rules', data=data)
         return Utils.deserialize(response.text, UserGroupRule)
 
     def activate_group_rule(self, rid):
@@ -253,7 +257,7 @@ class UserGroupsClient(ApiClient):
         :type rid: str
         :return: None
         """
-        return ApiClient.post_path(self, '/rules/{0}/lifecycle/activate'.format(rid))
+        return self.post_path('/rules/{0}/lifecycle/activate'.format(rid))
 
     def deactivate_group_rule(self, rid):
         """Deactivates a specific group rule by id from your organization
@@ -262,7 +266,7 @@ class UserGroupsClient(ApiClient):
         :type rid: str
         :return: None
         """
-        return ApiClient.post_path(self, '/rules/{0}/lifecycle/deactivate'.format(rid))
+        return self.post_path('/rules/{0}/lifecycle/deactivate'.format(rid))
 
     def delete_group_rule(self, rid):
         """Removes a specific group rule by id from your organization
@@ -271,18 +275,16 @@ class UserGroupsClient(ApiClient):
         :type rid: str
         :return: None
         """
-        return ApiClient.delete_path(self, '/rules/{0}'.format(rid))
+        return self.delete_path('/rules/{0}'.format(rid))
 
     def get_paged_apps_assigned_to_group(self, gid, url=None, limit=None, after=None):
         if url:
-            response = ApiClient.get(self, url)
+            response = self.get(url)
 
         else:
             params = {
                 'limit': limit,
                 'after': after
             }
-            response = ApiClient.get_path(self, '/{0}/apps'.format(gid), params=params)
+            response = self.get_path('/{0}/apps'.format(gid), params=params)
         return PagedResults(response, AppInstance)
-
-
