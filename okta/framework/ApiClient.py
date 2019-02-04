@@ -18,11 +18,13 @@ def dict_to_query_params(d):
 
 
 class ApiClient(object):
-    def __init__(self, base_url, api_token, max_attempts=1):
+    def __init__(self, base_url, api_token, max_attempts=1, retry_delay_base=0.25, max_retry_delay=5.0):
         self.base_url = base_url
         self.api_token = api_token
         self.api_version = 1
         self.max_attempts = max_attempts
+        self.retry_delay_base = retry_delay_base   # Before retrying, delay `base * 2^(attempt - 1)`
+        self.max_retry_delay = max_retry_delay     # ... but no longer than this
 
         if not self.base_url:
             raise ValueError('Invalid base_url')
@@ -53,7 +55,7 @@ class ApiClient(object):
                 error_data = resp.json()
                 error_data.update(status_code=resp.status_code)
                 raise OktaError(error_data)
-            time.sleep(2 ** (attempt - 1))
+            time.sleep(min(self.max_retry_delay, self.retry_delay_base * 2 ** (attempt - 1)))
 
     def get(self, url, params=None, max_attempts=None):
         params_str = dict_to_query_params(params)
