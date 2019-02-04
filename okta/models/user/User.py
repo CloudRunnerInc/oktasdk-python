@@ -6,7 +6,6 @@ from okta.models.Link import Link
 
 
 class User:
-
     types = {
         'id': str,
         'status': str,
@@ -30,7 +29,6 @@ class User:
     }
 
     def __init__(self, **kwargs):
-
         # unique key for user
         self.id = None  # str
 

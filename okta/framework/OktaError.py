@@ -4,7 +4,7 @@ class OktaError(Exception):
         if error is None:
             error = {}
 
-        Exception.__init__(self, error.get('errorSummary'))
+        super(OktaError, self).__init__(error.get('errorSummary'))
 
         self.error_causes = error.get('errorCauses')
         self.error_code = error.get('errorCode')
