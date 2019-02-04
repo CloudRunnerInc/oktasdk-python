@@ -41,5 +41,8 @@ setup(
         'requests>=2.5.3',
         'python-dateutil>=2.4.2',
         'six>=1.9.0'
-    ]
+    ],
+    tests_require=[
+        'requests-mock',
+    ],
 )
