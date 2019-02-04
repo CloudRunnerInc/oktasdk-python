@@ -5,7 +5,6 @@ from okta.models.event.Target import Target
 
 
 class Event:
-
     types = {
         'eventId': str,
         'published': datetime,
@@ -17,11 +16,10 @@ class Event:
     }
 
     def __init__(self):
-
         # unique key for event
         self.id = None  # str
 
-        # timestamp when event was published  
+        # timestamp when event was published
         self.published = None  # datetime
 
         # identifies the request
@@ -31,7 +29,5 @@ class Event:
         self.sessionId = None  # str
 
         self.action = None  # Action
-
         self.actors = None
-
         self.targets = None

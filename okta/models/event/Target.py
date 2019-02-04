@@ -2,7 +2,6 @@ from copy import copy
 
 
 class Target:
-
     types = {
         'id': str,
         'displayName': str,
@@ -10,7 +9,6 @@ class Target:
     }
 
     def __init__(self):
-
         # Unique key for actor
         self.id = None  # str
 
@@ -22,7 +20,6 @@ class Target:
 
 
 class UserTarget(Target):
-
     types = copy(Target.types)
     types.update({
         'login': str
@@ -34,7 +31,6 @@ class UserTarget(Target):
 
 
 class ClientTarget(Target, object):
-
     types = copy(Target.types)
     types.update({
         'ipAddress': str

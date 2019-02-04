@@ -1,5 +1,4 @@
 class Link:
-
     types = {
         'href': str,
         'method': str,
@@ -9,13 +8,8 @@ class Link:
     }
 
     def __init__(self):
-
         self.href = None
-
         self.method = None
-
         self.type = None
-
         self.name = None
-
         self.hints = None

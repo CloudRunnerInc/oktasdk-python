@@ -2,7 +2,6 @@ from okta.models.Embedded import Embedded
 
 
 class AuthResult:
-
     types = {
         'stateToken': str,
         'status': str,
@@ -21,23 +20,13 @@ class AuthResult:
     }
 
     def __init__(self):
-
         self.stateToken = None  # str
-
         self.status = None  # str
-
         self.expiresAt = None  # str
-
         self.relayState = None  # str
-
         self.factorResult = None  # str
-
         self.factorResultMessage = None  # str
-
         self.recoveryToken = None  # str
-
         self.sessionToken = None  # str
-
         self.idToken = None  # str
-
-        self.embedded = None # Embedded
+        self.embedded = None  # Embedded
