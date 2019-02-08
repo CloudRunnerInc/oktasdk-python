@@ -1,5 +1,7 @@
 class AppSettings:
 
+    allow_extra_fields = True
+
     types = {
         # Slack
         'domain': str,

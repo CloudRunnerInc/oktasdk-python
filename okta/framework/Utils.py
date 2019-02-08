@@ -37,6 +37,11 @@ class Utils(object):
 
             # Loop through each type of object in types
             if hasattr(to_class, 'types'):
+                if getattr(to_class, 'allow_extra_fields', False):
+                    for key, value in six.iteritems(json_dump):
+                        if key in to_class.types:
+                            continue
+                        custom_setattr(obj, key, json_dump[key])
                 for attr, attr_type in six.iteritems(to_class.types):
                     if attr in json_dump:
                         val = json_dump[attr]
