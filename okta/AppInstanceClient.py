@@ -32,8 +32,8 @@ class AppInstanceClient(ApiClient):
         response = self.get_path('/', params=params)
         return Utils.deserialize(response.text, AppInstance)
 
-    def get_paged_app_instances(
-            self, limit=None, filter_string=None, after=None, url=None):
+    def get_paged_app_instances(self, limit=None, filter_string=None,
+                                after=None, expand=None, url=None):
         """Get a paged list of AppInstances
 
         :param limit: maximum number of apps to return
@@ -42,6 +42,9 @@ class AppInstanceClient(ApiClient):
         :type filter_string: str or None
         :param after: app id that filtering will resume after
         :type after: str
+        :param expand: whether to traverses users link relationship and
+                       optionally embeds Application User resource
+        :type: expand: bool
         :param url: url that returns a list of AppInstance
         :type url: str
         :rtype: PagedResults of AppInstance
@@ -53,7 +56,8 @@ class AppInstanceClient(ApiClient):
             params = {
                 'limit': limit,
                 'after': after,
-                'filter': filter_string
+                'filter': filter_string,
+                'expand': expand
             }
             response = self.get_path('/', params=params)
 
@@ -130,17 +134,6 @@ class AppInstanceClient(ApiClient):
         self.post_path('/{0}/lifecycle/deactivate'.format(id), None)
 
     # USER
-
-    def get_app_assignments_for_user(self, user, expand_user=True):
-        if hasattr(user, 'id'):
-            uid = user.id
-        else:
-            uid = user
-        expand_user_param = "&expand=user/{}".format(uid)
-        path = "/?filter=user.id+eq+\"{uid}\"{expand_user}&limit=100".format(
-            uid=uid, expand_user=expand_user_param if expand_user else "")
-        response = self.get_path(path, params={})
-        return json.loads(response.text)
 
     def get_assigned_user_by_id_to_app(self, aid, uid):
         """Get the assigned user to an application by user id
