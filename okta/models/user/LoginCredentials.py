@@ -6,12 +6,15 @@ from okta.models.user.RecoveryQuestion import RecoveryQuestion
 class LoginCredentials:
 
     types = {
+        'userName': str,
         'password': Password,
         'recovery_question': RecoveryQuestion,
         'provider': Provider
     }
 
     def __init__(self):
+
+        self.userName = None  # str
 
         self.password = None  # Password
 

@@ -24,11 +24,11 @@ class AppInstance:
         'visibility': Visibility,
         'credentials': AppCredentials,
         'settings': Settings,
+        '_embedded': Embedded
     }
 
     dict_types = {
         '_links': Link,
-        '_embedded': Embedded,
     }
 
     def __init__(self):
