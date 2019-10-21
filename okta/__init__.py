@@ -19,3 +19,4 @@ from .UserGroupsClient import UserGroupsClient         # noqa: F401
 from .UsersClient import UsersClient                   # noqa: F401
 from .AdminRolesClient import AdminRolesClient         # noqa: F401
 from .SchemaClient import SchemaClient                 # noqa: F401
+from .SystemLogClient import SystemLogClient           # noqa: F401
