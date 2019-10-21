@@ -41,7 +41,8 @@ class SystemLogClient(ApiClient):
             response = ApiClient.get_path(self, '/', params=params)
         return PagedResults(response)
 
-    def get_all_log_event_pages(self, since=None, until=None, q=None, filter=None, limit=None, sleep_between_pages=None):
+    def get_all_log_event_pages(self, since=None, until=None, q=None, filter=None,
+                                limit=None, sleep_between_pages=None):
         page = self.get_paged_log_events(
             since=since,
             until=until,
@@ -57,7 +58,8 @@ class SystemLogClient(ApiClient):
             page = self.get_paged_log_events(url=page.next_url)
             yield page.result
 
-    def get_all_log_events(self, since=None, until=None, q=None, filter=None, max_results=None, sleep_between_pages=None):
+    def get_all_log_events(self, since=None, until=None, q=None, filter=None,
+                           max_results=None, sleep_between_pages=None):
         limit = 1000
         if max_results and max_results < limit:
             limit = max_results
