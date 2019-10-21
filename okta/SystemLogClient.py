@@ -1,14 +1,18 @@
+import time
+import warnings
+
 from okta.framework.ApiClient import ApiClient
 from okta.framework.PagedResults import PagedResults
-import time
 
 
 class SystemLogClient(ApiClient):
 
-    def __init__(self, base_url, api_token):
-        ApiClient.__init__(self, base_url + '/api/v1/logs', api_token)
-
-    # CRUD
+    def __init__(self, base_url, api_token, **kwargs):
+        super(SystemLogClient, self).__init__(
+            base_url + '/api/v1/logs',
+            api_token,
+            **kwargs
+        )
 
     def get_paged_log_events(self, since=None, until=None, q=None, filter=None, limit=None, url=None):
         """Get a paged list of log events
@@ -28,21 +32,31 @@ class SystemLogClient(ApiClient):
         :type url: str
         :rtype: PagedResults of log events in JSON format
         """
-        if url:
-            response = ApiClient.get(self, url)
-        else:
-            params = {
-                'since': since,
-                'until': until,
-                'q': q,
-                'filter': filter,
-                'limit': limit,
-            }
-            response = ApiClient.get_path(self, '/', params=params)
+        if url:  # pragma: no cover
+            assert since is None
+            assert until is None
+            assert q is None
+            assert filter is None
+            assert limit is None
+            warnings.warn("Don't pass `url`, use `get_next_page` method instead", DeprecationWarning)
+            return self.get_next_page(url)
+
+        params = {
+            'since': since,
+            'until': until,
+            'q': q,
+            'filter': filter,
+            'limit': limit,
+        }
+        response = self.get_path('/', params=params)
         return PagedResults(response)
 
-    def get_all_log_event_pages(self, since=None, until=None, q=None, filter=None,
-                                limit=None, sleep_between_pages=None):
+    def get_next_page(self, url):
+        return PagedResults(self.get(url))
+
+    def get_all_log_event_pages(self, since=None, until=None, q=None, filter=None, limit=None):
+        # NOTE: The `sleep_between_pages` argument is removed.
+        # Just do whatever you have to do (sleep, yield to event loop, etc) when iterating.
         page = self.get_paged_log_events(
             since=since,
             until=until,
@@ -53,28 +67,30 @@ class SystemLogClient(ApiClient):
         yield page.result
 
         while not page.is_last_page():
-            if sleep_between_pages:
-                time.sleep(sleep_between_pages)
-            page = self.get_paged_log_events(url=page.next_url)
+            page = self.get_next_page(page.next_url)
+            if not page.result:
+                return
             yield page.result
 
     def get_all_log_events(self, since=None, until=None, q=None, filter=None,
-                           max_results=None, sleep_between_pages=None):
-        limit = 1000
+                           max_results=None, sleep_between_pages=None, per_page=1000):
+        limit = per_page
         if max_results and max_results < limit:
             limit = max_results
 
-        i = 0
+        event_count = 0
         for event_list in self.get_all_log_event_pages(
             since=since,
             until=until,
             q=q,
             filter=filter,
             limit=limit,
-            sleep_between_pages=sleep_between_pages
         ):
             for event in event_list:
                 yield event
-                i += 1
-                if max_results is not None and i == max_results:
-                    raise StopIteration
+                event_count += 1
+                if max_results is not None and event_count >= max_results:
+                    return
+            if sleep_between_pages:
+                # Consider deprecating this?
+                time.sleep(sleep_between_pages)
