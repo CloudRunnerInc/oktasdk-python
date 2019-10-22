@@ -1,4 +1,3 @@
-import json
 from okta.models.app.AppUser import AppUser
 from okta.framework.ApiClient import ApiClient
 from okta.framework.Utils import Utils

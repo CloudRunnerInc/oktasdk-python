@@ -1,3 +1,4 @@
+import datetime
 import requests
 import json
 import time
@@ -7,12 +8,20 @@ import six
 from six.moves.urllib.parse import urlencode
 
 
+def value_to_string(value):
+    if type(value) is bool:
+        return str(value).lower()
+    if type(value) is datetime.datetime:
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return str(value)
+
+
 def dict_to_query_params(d):
     if d is None or len(d) == 0:
         return ""
 
     return "?{}".format(urlencode({
-        param: str(value).lower() if type(value) == bool else str(value)
+        param: value_to_string(value)
         for param, value in six.iteritems(d) if value is not None
     }))
 
